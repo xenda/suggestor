@@ -18,7 +18,7 @@ require_relative '../lib/suggestor/engine'
       end
 
       it "must return 0 as similarity record if two elements hace no shared items" do 
-        @algorithm.similarity_score_between(1,3).must_be :==, 0
+        @algorithm.similarity_score_between(1,99).must_be :==, 0
       end
 
       it "must return 1 as similarity record if two elements have equal related values" do 

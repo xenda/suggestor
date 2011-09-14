@@ -1,6 +1,4 @@
 require 'JSON'
-require_relative 'datum'
-require_relative 'algorithms/recommendation_algorithm'
 require_relative 'algorithms/euclidean_distance'
 require_relative 'algorithms/pearson_correlation'
 
@@ -20,16 +18,19 @@ module Suggestor
       add_to_collection(input)
     end
 
-    def similarity_score_for(first,second,algorithm)
-      strategy_for(algorithm).similarity_score_between(first,second)
+    def similarity_score_for(first, second, opts={})
+      opts[:algorithm] ||= :euclidean_distance 
+      strategy_for(opts[:algorithm]).similarity_score_between(first, second)
     end
 
-    def similar_items_to(item,algorithm)
-      strategy_for(algorithm).similar_items_to(item)
+    def similar_items_to(item, opts={})
+      opts[:algorithm] ||= :euclidean_distance 
+      strategy_for(opts[:algorithm]).similar_items_to(item)
     end
 
-    def recommented_related_items_for(item,algorithm)
-      strategy_for(algorithm).recommented_related_items_for(item)
+    def recommented_related_items_for(item, opts={})
+      opts[:algorithm] ||= :euclidean_distance 
+      strategy_for(opts[:algorithm]).recommented_related_items_for(item)
     end
 
     private
@@ -52,7 +53,6 @@ module Suggestor
     end
 
     def parse_from_json(json)
-      # Datum.new(JSON.parse(json))
       JSON.parse(json)
     rescue Exception => ex
       raise WrongInputFormat, "Wrong Data format: #{ex.message}" 

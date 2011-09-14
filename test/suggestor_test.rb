@@ -25,22 +25,22 @@ require_relative '../lib/suggestor'
       end
 
       it "must return a similarty score between to elements" do
-        @suggestor.similarity_score_for("1","1",:euclidean_distance).must_be :==, 1
+        @suggestor.similarity_score_for("1","1").must_be :==, 1
       end
 
       it "must return similar items from the base one with euclidean distance" do
         expected = {"2"=>0.02702702702702703, "3"=>0.02702702702702703}
-        @suggestor.similar_items_to("1",:euclidean_distance).must_be :==, expected
+        @suggestor.similar_items_to("1").must_be :==, expected
       end
 
       it "must return similar items from the base one with pearson correlation" do
         expected = {"1"=>1.0, "3"=>0.0} 
-        @suggestor.similar_items_to("2",:pearson_correlation).must_be :==, expected
+        @suggestor.similar_items_to("2",:algorithm => :pearson_correlation).must_be :==, expected
       end
 
-      it "must return similar items from the base one with pearson correlation" do
+      it "must return similar items from the base one with euclidean distance" do
         expected = {"4"=>1.0} 
-        @suggestor.recommented_related_items_for("2",:euclidean_distance).must_be :==, expected
+        @suggestor.recommented_related_items_for("2").must_be :==, expected
       end
 
     end

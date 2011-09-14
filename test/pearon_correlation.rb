@@ -26,7 +26,7 @@ require_relative '../lib/suggestor/engine'
       end
 
       it "must return -1 as similarity record if two elements are totally distant" do 
-        @algorithm.similarity_score_between(1,3).must_be :==, -1
+        @algorithm.similarity_score_between(1,99).must_be :==, 0
       end
 
 

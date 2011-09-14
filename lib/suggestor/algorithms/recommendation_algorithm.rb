@@ -8,39 +8,33 @@ module Suggestor
         @collection = collection
       end
 
-      def similar_items_to(item)
+      # returns similar items based on their similary score
+      # for example, similar users based on their movies reviews
+      def similar_items_to(main)
+
+        #just compare those whore aren't the main item
         compare_to = collection.dup
-        compare_to.delete(item)
+        compare_to.delete(main)
+
+        # return results based on their score
         compare_to.keys.inject({}) do |result, other|
-          result.merge!({other => similarity_score_between(item,other)})
-        end
-      end
-
-      def recommented_related_items_for(item)
-        totals = {}
-        sum = {}
-        collection.each do |other|
-          next if other == item
-          score = similarity_score_between(item,other)
-          next if score <= 0
-
-          collection[other].each do |other_item|
-            unless collection[item].incluude? other_item || collection[item][]
-            end
-          end
-
+          result.merge!({other => similarity_score_between(main,other)})
         end
 
       end
 
-      def inverse_of_sum_of_squares_between(first,second)
-        1/(1+sum_squares_of_shared_items_between(first,second))
-      end
+      # returns recommended related items for the main user
+      # The most important feature. For example, a user will get
+      # movie recommendations based on his past movie reviews
+      # and how it compares with others
+      def recommented_related_items_for(main)
 
-      def sum_squares_of_shared_items_between(first,second)
-        shared_items_between(first,second).inject(0.0) do |sum,item|
-          sum + (values_for(first)[item] - values_for(second)[item])**2
-        end
+        @similarities = @totals = Hash.new(0)
+        @main = main
+
+        create_similarities_totals
+        generate_rankings
+
       end
 
       def no_shared_items_between?(first,second)
@@ -54,12 +48,59 @@ module Suggestor
         end
       end
 
+     private
+
+      def main_already_has?(related)
+        collection[@main].has_key?(related)
+      end
+      
       def values_for(id)
         collection[id.to_s]
       end
 
       def related_keys_for(id)
         values_for(id).keys
+      end
+ 
+      def add_to_totals(other,item,score)
+        @totals[item] += collection[other][item]*score
+        @similarities[item] += score
+      end
+
+      def generate_rankings
+        @rankings = {}
+
+        @totals.each_pair do |item, total|
+          normalized_value = (total / @similarities[item])
+          @rankings.merge!( { item => normalized_value} )
+        end
+
+        @rankings
+
+      end
+
+      def create_similarities_totals
+        
+        collection.keys.each do |other|
+         
+          # won't bother comparing it if the compared item is the same
+          # as the main, or if they scores are below 0 (nothing in common)
+          next if other == @main
+          score = similarity_score_between(@main,other)
+          next if score <= 0
+
+          # will compare each the results but only for related items
+          # that the main item doesn't already have
+          # For ex., if they have already saw a movie they won't 
+          # get it suggested 
+          collection[other].keys.each do |item|
+
+            unless main_already_has?(item)
+              add_to_totals(other,item,score)            
+            end
+
+          end
+        end
       end
 
     end

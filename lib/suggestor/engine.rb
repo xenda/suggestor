@@ -28,12 +28,17 @@ module Suggestor
       strategy_for(algorithm).similar_items_to(item)
     end
 
+    def recommented_related_items_for(item,algorithm)
+      strategy_for(algorithm).recommented_related_items_for(item)
+    end
+
     private
 
     def strategy_for(algorithm)
       constantize(classify(algorithm)).new(collection)
     end
 
+    # based on Rail's code
     def classify(name)
       name.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }  
     end

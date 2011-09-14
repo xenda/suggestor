@@ -28,21 +28,20 @@ require_relative '../lib/suggestor'
         @suggestor.similarity_score_for("1","1",:euclidean_distance).must_be :==, 1
       end
 
-      it "must return similar items from the base one" do
-        expected = {"1"=>0.058823529411764705, "3"=>0.038461538461538464} 
-        @suggestor.similar_items_to("2",:euclidean_distance).must_be :==, expected
+      it "must return similar items from the base one with euclidean distance" do
+        expected = {"2"=>0.02702702702702703, "3"=>0.02702702702702703}
+        @suggestor.similar_items_to("1",:euclidean_distance).must_be :==, expected
       end
 
-
-      it "must return similar items from the base one" do
-        expected = {"1"=>0.058823529411764705, "3"=>0.038461538461538464} 
-        @suggestor.similar_items_to("1",:pearson_correlation).must_be :==, expected
+      it "must return similar items from the base one with pearson correlation" do
+        expected = {"1"=>1.0, "3"=>0.0} 
+        @suggestor.similar_items_to("2",:pearson_correlation).must_be :==, expected
       end
 
-      # it "must return equal similarty records if both are equal" do
-      #   users = {users: [{id:1, values:[{movie_id:1,value:10},{movie_id:2,value:3}]}]}
-      #   @suggestor.user_collection.must_be_same_as users
-      # end
+      it "must return similar items from the base one with pearson correlation" do
+        expected = {"4"=>1.0} 
+        @suggestor.recommented_related_items_for("2",:euclidean_distance).must_be :==, expected
+      end
 
     end
 

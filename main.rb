@@ -1,6 +1,16 @@
 require_relative 'lib/suggestor'
 
 engine = Suggestor::Engine.new
+
+# I'm using test data of Users and their movie recommendations
+# Each user (identified by their ids) have a hash of their movies ids and
+# what they've rate them with
 json = File.read("test/test.json")
+
 engine.load(json)
-puts engine.collection.inspect
+
+# Let's get some similar users 
+puts engine.similar_items_to("2", :euclidean_distance).inspect
+
+# So, after knowing them, why not having some recommendations? 
+puts @engine.recommented_related_items_for("2",:euclidean_distance)

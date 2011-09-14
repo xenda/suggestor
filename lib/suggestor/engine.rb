@@ -45,7 +45,7 @@ module Suggestor
     end
 
     def constantize(name)
-      Object.const_get("Suggestor").const_get("Algorithms").const_get(name)
+      Suggestor::Algorithms.const_get(name)
     end
     
     def add_to_collection(input)

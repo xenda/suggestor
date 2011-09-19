@@ -1,4 +1,4 @@
-require 'JSON'
+require 'json'
 require_relative 'algorithms/euclidean_distance'
 require_relative 'algorithms/pearson_correlation'
 

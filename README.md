@@ -10,7 +10,7 @@ tastes) and alike.
 
 The gem needs an structure of date like this:
  
-    data = {"1": {"10": 10, "12": 1}, "2": {"11":5, "12": 4}}
+    data = '{"1": {"10": 10, "12": 1}, "2": {"11":5, "12": 4}}'
 
 Each element will ("1" or "2") correspond to, following the example, to user ids. They will gave access to related items (movies). 
 

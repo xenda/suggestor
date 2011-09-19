@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
-require_relative "lib/suggestor/version"
+$:.push File.expand_path("../lib", __FILE__)
+require "suggestor/version"
 
 Gem::Specification.new do |s|
   s.name        = "suggestor"

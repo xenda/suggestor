@@ -37,7 +37,7 @@ module Suggestor
 
         calculate_all_sums_for(first, second)
         numerator = difference_from_total_and_normalize_values
-        # 10.5 /    0.0 / 
+
         denominator = square_root_from_differences_of_sums
 
         return 0.0 if denominator == 0
@@ -96,6 +96,7 @@ module Suggestor
 
         power_right_result = ( @second_values_sum **2 )/@total_related_items
         equation_right = @second_square_values_sum - power_right_result
+        
         Math.sqrt(equation_left * equation_right)
 
       end

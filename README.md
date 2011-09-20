@@ -10,11 +10,11 @@ tastes) and alike.
 
 The gem needs an structure of date like this:
  
-    data = '{"1": {"10": 10, "12": 1}, "2": {"11":5, "12": 4}}'
+    data = '{"Alvaro Pereyra Rabanal": {"Primer": 10, "Memento": 9}, "Gustavo Leon": {"The Matrix":8, "Harry Potter": 8}}'
 
-Each element will ("1" or "2") correspond to, following the example, to user ids. They will gave access to related items (movies). 
+Each element will correspond to, following the example, users. They will gave access to related items (reviews for movies). 
 
-In the example, the user "1" has seen movies identified with ids "10" and "12", given them a rating of 10 and 1, respectively. Similar with user with id "2".
+In the example, the user "Alvaro Pereyra Rabanal" has seen movies "Primer" and "Memento", given them a rating of 10 and 9, respectively. Similar with user with "Gustavo Leon".
 
 After loading the gem with the data: 
     
@@ -28,18 +28,27 @@ We can start to get some results.
 
 For example, we can get similar users: 
 
-    engine.similar_items_to("1")
+    engine.similar_items_to("Alvaro Pereyra Rabanal")
 
 Which will return an structure like
 
-    {id: similarity_score, id2: similarity_score }
+    [["label", similarity_score], ["label": similarity_score]]
+
+Like:
+
+  [["Eogen Clase", 0.0001649620587264929], ["Daniel Subauste", 0.00011641443538998836], ["4D2Studio Diseno y Animacion", 8.548469823901521e-05], ["Rafael  Lanfranco", 6.177033788374823e-05], ["Veronica Zapata Gotelli", 6.074965068950854e-05]]
 
 Thus, you can load the data and save their similarity scores for later use.
+
+You can limit the data passing a "size" argument:
+
+  engine.similar_items_to("Alvaro Pereyra Rabanal", :size => 5)
 
 Now, that fine and all, but what about Mr. Bob who always is ranking everything
 higher. ID4 maybe is not that good after all. If that happens, Suggestor allows you to change the algorithm used:
 
-    engine.similar_items_to("1", :algorithm => :pearson_correlation)
+    opts = { algorithm: :pearson_correlation }
+    engine.recommented_related_items_for("Alvaro Pereyra Rabanal", opts)
 
 There are two implemented methods, Euclidean Distance and Pearson Correlation.
 
@@ -54,11 +63,22 @@ take in mind if some user grades higher or lower and return more exact suggestio
 Most interestingly, the gem allows you to get suggestions base on the data.
 For example, which movies shoud user "2" watch based on his reviews, and similar other users tastes?
 
-    engine.recommented_related_items_for("2",:pearson_correlation)
+    opts = { algorithm: :pearson_correlation }
+    engine.recommented_related_items_for("Alvaro Pereyra Rabanal", opts)
 
 As before, the structure returned will be
 
-    {id: similarity_score, id2: similarity_score }
+    [["label", similarity_score], ["label": similarity_score]]
 
-But in this case, it will represent movie id's, and how similar are. You
+But in this case, it will represent movie labels, and how similar they are. You
 can easily use this data to save it to a BD, since Movie ratings tend to estabilize on time and won't change that often. 
+
+### Similar related items
+
+We can also invert the data that the user has added, enableing us to get 
+similar related items. For example, let's say I'm on a Movie profile and
+want to check which other movies are similar to it:
+
+    engine.similar_related_items_to("Batman Begins ", :size => 5)
+
+Now you can go and build your awesome recommendations web site :)

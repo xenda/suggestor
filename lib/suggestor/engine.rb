@@ -18,22 +18,28 @@ module Suggestor
       add_to_collection(input)
     end
 
-    def similarity_score_for(first, second, opts={})
-      opts[:algorithm] ||= :euclidean_distance 
-      strategy_for(opts[:algorithm]).similarity_score_between(first, second)
-    end
+    # def similarity_score_for(first, second, opts={})
+    #   run_algorithm_method(:similarity_score_between,first,second)
+    # end
 
     def similar_items_to(item, opts={})
-      opts[:algorithm] ||= :euclidean_distance 
-      strategy_for(opts[:algorithm]).similar_items_to(item)
+      run_algorithm_method(:similar_items_to,item, opts)
     end
 
     def recommented_related_items_for(item, opts={})
-      opts[:algorithm] ||= :euclidean_distance 
-      strategy_for(opts[:algorithm]).recommented_related_items_for(item)
+      run_algorithm_method(:recommented_related_items_for,item, opts)
+    end
+
+    def similar_related_items_to(item, opts={})
+      run_algorithm_method(:similar_related_items_to,item, opts)
     end
 
     private
+
+    def run_algorithm_method(method, item, opts)
+      opts[:algorithm] ||= :euclidean_distance 
+      strategy_for(opts[:algorithm]).send(method,item, opts[:size])
+    end
 
     def strategy_for(algorithm)
       constantize(classify(algorithm)).new(collection)

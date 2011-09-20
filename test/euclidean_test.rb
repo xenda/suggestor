@@ -5,7 +5,7 @@ require_relative '../lib/suggestor/engine'
   describe Suggestor::Algorithms::EuclideanDistance do
     
     before do
-      @data_string = File.read("test/test.json")
+      @data_string = File.read("test/numbers.json")
       @suggestor = Suggestor::Engine.new
       @suggestor.load_data(@data_string)
       @algorithm = Suggestor::Algorithms::EuclideanDistance.new(@suggestor.collection)

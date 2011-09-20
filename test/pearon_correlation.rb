@@ -5,7 +5,7 @@ require_relative '../lib/suggestor/engine'
   describe Suggestor::Algorithms::PearsonCorrelation do
     
     before do
-      @data_string = File.read("test/test.json")
+      @data_string = File.read("test/numbers.json")
       @suggestor = Suggestor::Engine.new
       @suggestor.load_data(@data_string)
       @algorithm = Suggestor::Algorithms::PearsonCorrelation.new(@suggestor.collection)
@@ -17,16 +17,12 @@ require_relative '../lib/suggestor/engine'
         @algorithm.shared_items_between(1,2).must_be :==, ["1","2"]
       end
 
-      it "must return 0 as similarity record if two elements hace no shared items" do 
-        @algorithm.similarity_score_between(1,4).must_be :==, 0
-      end
-
       it "must return 1 as similarity record if two elements have equal related values" do 
         @algorithm.similarity_score_between(1,1).must_be :==, 1
       end
 
       it "must return -1 as similarity record if two elements are totally distant" do 
-        @algorithm.similarity_score_between(1,99).must_be :==, 0
+        @algorithm.similarity_score_between(1,99).must_be :==, -1
       end
 
 

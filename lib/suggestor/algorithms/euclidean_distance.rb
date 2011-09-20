@@ -30,7 +30,7 @@ module Suggestor
       end
 
       def inverse_of_sum_of_squares_between(first, second)
-        1/(1+sum_squares_of_shared_items_between(first, second))
+        1/(1+Math.sqrt(sum_squares_of_shared_items_between(first, second)))
       end
 
       def sum_squares_of_shared_items_between(first, second)

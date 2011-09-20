@@ -4,7 +4,7 @@ require_relative '../lib/suggestor'
   describe Suggestor::Engine do
     before do
       @suggestor = Suggestor::Engine.new
-      @data_string = File.read("test/test.json")
+      @data_string = File.read("test/numbers.json")
     end
 
     describe "when loading up the data structure" do
@@ -24,24 +24,27 @@ require_relative '../lib/suggestor'
         @suggestor.load_data(@data_string)
       end
 
-      it "must return a similarty score between to elements" do
-        @suggestor.similarity_score_for("1","1").must_be :==, 1
-      end
-
       it "must return similar items from the base one with euclidean distance" do
-        expected = {"2"=>0.02702702702702703, "3"=>0.02702702702702703}
+        expected = [["3", 0.14285714285714285], ["2", 0.14285714285714285]]
         @suggestor.similar_items_to("1").must_be :==, expected
       end
 
       it "must return similar items from the base one with pearson correlation" do
-        expected = {"1"=>1.0, "3"=>0.0} 
-        @suggestor.similar_items_to("2",:algorithm => :pearson_correlation).must_be :==, expected
+        expected = [["2", 0.0], ["1", 0.0]]
+        opts = {algorithm: :pearson_correlation}
+        @suggestor.similar_items_to("3",opts).must_be :==, expected
       end
 
       it "must return similar items from the base one with euclidean distance" do
-        expected = {"4"=>1.0} 
+        expected = [["4", 2.6457513110645903]]
         @suggestor.recommented_related_items_for("2").must_be :==, expected
       end
+
+      it "must return similar related items from one of them" do
+        expected = [["3", 1.0], ["1", 0.14285714285714285]]
+        @suggestor.similar_items_to("2").must_be :==, expected
+      end
+
 
     end
 

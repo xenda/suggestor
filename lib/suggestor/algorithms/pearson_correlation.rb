@@ -33,7 +33,7 @@ module Suggestor
       include RecommendationAlgorithm
 
       def similarity_score_between(first, second)
-        return 0.0 if no_shared_items_between?(first, second)
+        return -1.0 if no_shared_items_between?(first, second)
 
         calculate_all_sums_for(first, second)
         numerator = difference_from_total_and_normalize_values
@@ -48,10 +48,10 @@ module Suggestor
 
       private
 
-      def calculate_all_sums_for(first,second)
+      def calculate_all_sums_for(first, second)
         
         shared_items = shared_items_between(first, second)
-        @total_related_items = shared_items.size
+        @total_related_items = shared_items.size.to_f
 
         #simplify access
         first_values = values_for(first)
@@ -96,7 +96,7 @@ module Suggestor
 
         power_right_result = ( @second_values_sum **2 )/@total_related_items
         equation_right = @second_square_values_sum - power_right_result
-        
+
         Math.sqrt(equation_left * equation_right)
 
       end

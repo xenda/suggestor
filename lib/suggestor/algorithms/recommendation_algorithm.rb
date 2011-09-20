@@ -136,7 +136,9 @@ module Suggestor
             end
 
           end
+
         end
+        
       end
 
     end

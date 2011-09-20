@@ -17,11 +17,7 @@ module Suggestor
     def load_data(input)
       add_to_collection(input)
     end
-
-    # def similarity_score_for(first, second, opts={})
-    #   run_algorithm_method(:similarity_score_between,first,second)
-    # end
-
+    
     def similar_items_to(item, opts={})
       run_algorithm_method(:similar_items_to,item, opts)
     end

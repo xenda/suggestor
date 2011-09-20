@@ -45,7 +45,5 @@ require_relative '../lib/suggestor'
         @suggestor.similar_items_to("2").must_be :==, expected
       end
 
-
     end
-
   end

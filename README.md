@@ -36,7 +36,7 @@ Which will return an structure like
 
 Like:
 
-  [["Eogen Clase", 0.0001649620587264929], ["Daniel Subauste", 0.00011641443538998836], ["4D2Studio Diseno y Animacion", 8.548469823901521e-05], ["Rafael  Lanfranco", 6.177033788374823e-05], ["Veronica Zapata Gotelli", 6.074965068950854e-05]]
+    [["Eogen Clase", 0.0001649620587264929], ["Daniel Subauste", 0.00011641443538998836], ["4D2Studio Diseno y Animacion", 8.548469823901521e-05], ["Rafael  Lanfranco", 6.177033788374823e-05], ["Veronica Zapata Gotelli", 6.074965068950854e-05]]
 
 Thus, you can load the data and save their similarity scores for later use.
 

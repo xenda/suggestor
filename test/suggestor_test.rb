@@ -26,23 +26,26 @@ require_relative '../lib/suggestor'
 
       it "must return similar items from the base one with euclidean distance" do
         expected = [["3", 0.14285714285714285], ["2", 0.14285714285714285]]
-        @suggestor.similar_items_to("1").must_be :==, expected
+        @suggestor.similar_to("1").must_be :==, expected
       end
 
       it "must return similar items from the base one with pearson correlation" do
-        expected = [["2", 0.0], ["1", 0.0]]
-        opts = {algorithm: :pearson_correlation}
-        @suggestor.similar_items_to("3",opts).must_be :==, expected
+        expected = [["2", 1.0], ["1", 0.14285714285714285]]
+        
+        suggestor = Suggestor::Engine.new(Suggestor::Algorithms::PearsonCorrelation)
+        suggestor.load_data(@data_string)
+        
+        @suggestor.similar_to("3").must_be :==, expected
       end
 
       it "must return similar items from the base one with euclidean distance" do
         expected = [["4", 2.6457513110645903]]
-        @suggestor.recommented_related_items_for("2").must_be :==, expected
+        @suggestor.recommended_to("2").must_be :==, expected
       end
 
       it "must return similar related items from one of them" do
-        expected = [["3", 1.0], ["1", 0.14285714285714285]]
-        @suggestor.similar_items_to("2").must_be :==, expected
+        expected = [["5", 0.3333333333333333], ["3", 0.25], ["1", 0.12389934309929541], ["4", 0.0]]
+        @suggestor.similar_related_to("2").must_be :==, expected
       end
 
     end

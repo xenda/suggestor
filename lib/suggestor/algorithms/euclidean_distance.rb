@@ -1,5 +1,3 @@
-require_relative 'recommendation_algorithm'
-
 module Suggestor
   module Algorithms
 
@@ -24,17 +22,17 @@ module Suggestor
 
       include RecommendationAlgorithm
 
-      def similarity_score_between(first, second)
-        return 0.0 if no_shared_items_between?(first, second)
-        inverse_of_sum_of_squares_between(first, second)
+      def similarity_score(first, second)
+        return 0.0 if nothing_shared?(first, second)
+        inverse_of_squares(first, second)
       end
 
-      def inverse_of_sum_of_squares_between(first, second)
-        1/(1+Math.sqrt(sum_squares_of_shared_items_between(first, second)))
+      def inverse_of_squares(first, second)
+        1/(1+Math.sqrt(sum_squares(first, second)))
       end
 
-      def sum_squares_of_shared_items_between(first, second)
-        shared_items_between(first, second).inject(0.0) do |sum, item|
+      def sum_squares(first, second)
+        shared_items(first, second).inject(0.0) do |sum, item|
           sum + (values_for(first)[item] - values_for(second)[item])**2
         end
       end

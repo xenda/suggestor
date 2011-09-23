@@ -8,81 +8,94 @@ module Suggestor
         @collection = collection
       end
 
-      # returns similar items based on their similary score
-      # for example, similar users based on their movies reviews
-      def similar_items_to(main, size=nil)
+      # Ex. Similar users based on their movies reviews
+      def similar_to(main, opts={})
+        opts.merge!(default_options)
+ 
+        collection = remove_self(main)
 
-        #just compare those whore aren't the main item
-        compare_to = collection.dup
-        compare_to.delete(main)
+        results = order_by_similarity_score(main,collection)
 
-        # return results based on their score
-        result = compare_to.keys.inject({}) do |res, other|
-          res.merge!({other => similarity_score_between(main, other)})
-        end
-
-        sorted_result = sort_results(result)
-        return sorted_result[0, size] if size
-        sorted_result
+        sort_results(results,opts[:size])
 
       end
 
-      # returns recommended related items for the main user
-      # The most important feature. For example, a user will get
-      # movie recommendations based on his past movie reviews
-      # and how it compares with others
-      def recommented_related_items_for(main, size=nil)
+      # Ex. a user will get movie recommendations
+      def recommended_to(main, opts={})
+        opts.merge!(default_options)
 
         @similarities = @totals = Hash.new(0)
-        @main = main
 
-        create_similarities_totals
-        generate_rankings(size)
+        create_similarities_totals(main)
+        results = generate_rankings
+
+        sort_results(results,opts[:size])
 
       end
 
-      # returns similar related items from the original
-      # collection. For example, it will say what other movies
-      # are related to a given one. Inverts the user data
-      def similar_related_items_to(main,size=nil)
+      # Ex. what other movies are related to a given one
+      def similar_related_to(main, opts={})
+        opts.merge!(default_options)
+
         collection = invert_collection
 
         engine = self.class.new(collection)
-        engine.similar_items_to(main,size)
+        engine.similar_to(main,opts)
+      
       end
 
-      # will invert the collection
-      # returning { "Cat": {"1": 10, "2":20}, "Dog": {"1":5, "2": 15} }
-      # from {"1": {"Cat": 10, "Dog": 5}, "2": {"Cat": 20, "Dog": 15}
+      def shared_items(first, second)
+        return [] unless values_for(first) && values_for(second)        
+         
+        related_keys_for(first).select do |item| 
+          related_keys_for(second).include? item
+        end
+      end           
 
+     private
+
+      def default_options
+        {size: 5}
+      end
+
+      def nothing_shared?(first, second)
+        shared_items(first, second).empty?
+      end
+
+      def remove_self(main)
+        cleaned = collection.dup
+        cleaned.delete(main)
+        cleaned
+      end
+
+
+      # changes { "Cat": {"1": 10, "2":20}, "Dog": {"1":5, "2": 15} }
+      # to {"1": {"Cat": 10, "Dog": 5}, "2": {"Cat": 20, "Dog": 15}
       def invert_collection
         results = {}
 
         collection.keys.each do |main|
           collection[main].keys.each do |item|
+
             results[item] ||= {}
             results[item][main] = collection[main][item]
+
           end
         end
 
         results
       end
 
-      def no_shared_items_between?(first, second)
-        shared_items_between(first, second).empty?
-      end
+      def order_by_similarity_score(main,collection)
 
-      def shared_items_between(first, second)
-        return [] unless values_for(first) && values_for(second)         
-        related_keys_for(first).select do |item| 
-          related_keys_for(second).include? item
+        result = collection.keys.inject({}) do |res, other|
+          res.merge!({other => similarity_score(main, other)})
         end
+
       end
 
-     private
-
-      def main_already_has?(related)
-        collection[@main].has_key?(related)
+      def already_has?(main, related)
+        collection[main].has_key?(related)
       end
       
       def values_for(id)
@@ -98,40 +111,45 @@ module Suggestor
         @similarities[item] += score
       end
 
-      def sort_results(results)
-        results.sort{|a,b| a[1] <=> b[1]}.reverse
+      def sort_results(results,size=-1)
+        sorted = results.sort{|a,b| a[1] <=> b[1]}.reverse
+        return sorted[0, size]
       end
 
-      def generate_rankings(size=nil)
+      def generate_rankings
+
         rankings = {}
         
         @totals.each_pair do |item, total|
           normalized_value = (total / Math.sqrt(@similarities[item]))
           rankings.merge!( { item => normalized_value} )
         end
-        sorted_rankings = sort_results(rankings)
+
+        rankings
         
-        return sorted_rankings[0, size] if size
-        sorted_rankings
       end
 
-      def create_similarities_totals
+      def something_in_common?(score)
+        score > 0
+      end
+
+      def same_item?(main, other)
+        other == main
+      end
+
+      def create_similarities_totals(main)
         
         collection.keys.each do |other|
          
-          # won't bother comparing it if the compared item is the same
-          # as the main, or if they scores are below 0 (nothing in common)
-          next if other == @main
-          score = similarity_score_between(@main, other)
-          next if score <= 0
+          next if same_item?(main,other)
 
-          # will compare each the results but only for related items
-          # that the main item doesn't already have
-          # For ex., if they have already saw a movie they won't 
-          # get it suggested 
+          score = similarity_score(main, other)
+
+          next unless something_in_common?(score)
+
           collection[other].keys.each do |item|
 
-            unless main_already_has?(item)
+            unless already_has?(main, item)
               add_to_totals(other, item, score)            
             end
 
@@ -140,6 +158,7 @@ module Suggestor
         end
         
       end
+
 
     end
   end

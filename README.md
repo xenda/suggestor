@@ -48,7 +48,7 @@ Now, that fine and all, but what about Mr. Bob who always is ranking everything
 higher. ID4 maybe is not that good after all. If that happens, Suggestor allows you to change the algorithm used:
 
     opts = { algorithm: :pearson_correlation }
-    engine.recommented_related_items_for("Alvaro Pereyra Rabanal", opts)
+    engine.recommended_related_items_for("Alvaro Pereyra Rabanal", opts)
 
 There are two implemented methods, Euclidean Distance and Pearson Correlation.
 
@@ -64,7 +64,7 @@ Most interestingly, the gem allows you to get suggestions base on the data.
 For example, which movies shoud user "2" watch based on his reviews, and similar other users tastes?
 
     opts = { algorithm: :pearson_correlation }
-    engine.recommented_related_items_for("Alvaro Pereyra Rabanal", opts)
+    engine.recommended_related_items_for("Alvaro Pereyra Rabanal", opts)
 
 As before, the structure returned will be
 

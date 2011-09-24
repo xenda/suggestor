@@ -1,12 +1,13 @@
 require 'minitest/autorun'
+require 'json'
 require_relative '../lib/suggestor'
 
   describe Suggestor::Algorithms::EuclideanDistance do
     
     before do
       data_string = File.read("test/numbers.json")
-      suggestor = Suggestor::Engine.new(data_string,Suggestor::Algorithms::EuclideanDistance)
-      @algorithm = Suggestor::Algorithms::EuclideanDistance.new(suggestor.collection)
+      data = JSON.parse(data_string)
+      @algorithm = Suggestor::Algorithms::EuclideanDistance.new(data)
     end
 
     describe "when building up recommendations" do

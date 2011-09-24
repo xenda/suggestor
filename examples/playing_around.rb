@@ -4,10 +4,7 @@ require_relative '../lib/suggestor'
 # Each user have a hash of their reviews with the movie and
 # what they've rate them with
 json = File.read("test/movies.json")
-
-engine = Suggestor::Engine.new(Suggestor::Algorithms::EuclideanDistance)
-
-data = engine.load_data(json)
+engine = Suggestor::Engine.new(json, Suggestor::Algorithms::EuclideanDistance)
 
 # Let's get some similar users 
 name = "Alvaro Pereyra Rabanal"
@@ -29,8 +26,7 @@ puts
 
 # That's good, but let's take in mind bias while using Pearson Correlation:
 puts "Adjust this results please"
-engine = Suggestor::Engine.new(Suggestor::Algorithms::PearsonCorrelation)
-data = engine.load_data(json)
+engine = Suggestor::Engine.new(json,Suggestor::Algorithms::PearsonCorrelation)
 
 ops = {size: 5}
 results = engine.recommended_to("Alvaro Pereyra Rabanal", opts)

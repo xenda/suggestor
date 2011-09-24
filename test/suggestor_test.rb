@@ -3,17 +3,12 @@ require_relative '../lib/suggestor'
 
   describe Suggestor::Engine do
     before do
-      @suggestor = Suggestor::Engine.new
       @data_string = File.read("test/numbers.json")
     end
 
     describe "when loading up the data structure" do
       it "must raise an exception with invalid data" do
-        lambda{ @suggestor.load_data("GIBBERISH}") }.must_raise Suggestor::WrongInputFormat
-      end
-
-      it "must return an array structure if data is ok" do
-        @suggestor.load_data(@data_string).must_be_instance_of Hash
+        lambda{ Suggestor::Engine.new("GIBBERISH") }.must_raise Suggestor::WrongInputFormat
       end
 
     end
@@ -21,7 +16,7 @@ require_relative '../lib/suggestor'
     describe "when accesing the data after load_dataing it" do
 
       before do
-        @suggestor.load_data(@data_string)
+        @suggestor = Suggestor::Engine.new(@data_string)
       end
 
       it "must return similar items from the base one with euclidean distance" do
@@ -30,12 +25,13 @@ require_relative '../lib/suggestor'
       end
 
       it "must return similar items from the base one with pearson correlation" do
+        
+        @suggestor = Suggestor::Engine.new(@data_string,Suggestor::Algorithms::PearsonCorrelation)
+
         expected = [["2", 1.0], ["1", 0.14285714285714285]]
         
-        suggestor = Suggestor::Engine.new(Suggestor::Algorithms::PearsonCorrelation)
-        suggestor.load_data(@data_string)
-        
         @suggestor.similar_to("3").must_be :==, expected
+        
       end
 
       it "must return similar items from the base one with euclidean distance" do

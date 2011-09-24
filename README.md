@@ -18,8 +18,7 @@ In the example, the user "Alvaro Pereyra Rabanal" has seen movies "Primer" and "
 
 After loading the gem with the data: 
     
-    engine = Suggestor::Engine.new
-    engine.load_data(data)
+    engine = Suggestor::Engine.new(data)
 
 We can start to get some results. 
 
@@ -28,7 +27,7 @@ We can start to get some results.
 
 For example, we can get similar users: 
 
-    engine.similar_items_to("Alvaro Pereyra Rabanal")
+    engine.similar_to("Alvaro Pereyra Rabanal")
 
 Which will return an structure like
 
@@ -42,13 +41,15 @@ Thus, you can load the data and save their similarity scores for later use.
 
 You can limit the data passing a "size" argument:
 
-  engine.similar_items_to("Alvaro Pereyra Rabanal", :size => 5)
+  engine.similar_to("Alvaro Pereyra Rabanal", :size => 5)
 
 Now, that fine and all, but what about Mr. Bob who always is ranking everything
 higher. ID4 maybe is not that good after all. If that happens, Suggestor allows you to change the algorithm used:
 
-    opts = { algorithm: :pearson_correlation }
-    engine.recommended_related_items_for("Alvaro Pereyra Rabanal", opts)
+    algorithm = Suggestor::Algorithms::PearsonCorrelation
+    engine = Suggestor::Engine.new(data, algorithm)
+
+    engine.recommended_to("Alvaro Pereyra Rabanal")
 
 There are two implemented methods, Euclidean Distance and Pearson Correlation.
 
@@ -63,8 +64,7 @@ take in mind if some user grades higher or lower and return more exact suggestio
 Most interestingly, the gem allows you to get suggestions base on the data.
 For example, which movies shoud user "2" watch based on his reviews, and similar other users tastes?
 
-    opts = { algorithm: :pearson_correlation }
-    engine.recommended_related_items_for("Alvaro Pereyra Rabanal", opts)
+    engine.recommended_to("Alvaro Pereyra Rabanal")
 
 As before, the structure returned will be
 
@@ -79,6 +79,6 @@ We can also invert the data that the user has added, enableing us to get
 similar related items. For example, let's say I'm on a Movie profile and
 want to check which other movies are similar to it:
 
-    engine.similar_related_items_to("Batman Begins ", :size => 5)
+    engine.similar_related_to("Batman Begins ", :size => 5)
 
 Now you can go and build your awesome recommendations web site :)

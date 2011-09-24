@@ -33,24 +33,6 @@ module Suggestor
     end
 
     private
-
-    # def execute(method, item, opts)
-    #   opts[:algorithm] ||= :euclidean_distance 
-    #   strategy_for(opts[:algorithm]).send(method,item, opts[:size])
-    # end
-
-    # def strategy_for(algorithm)
-    #   constantize(classify(algorithm)).new(collection)
-    # end
-
-    # based on Rail's code
-    # def classify(name)
-    #   name.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }  
-    # end
-
-    # def constantize(name)
-    #   Suggestor::Algorithms.const_get(name)
-    # end
     
     def add_to_collection(input)
       @collection.merge! parse_from_json(input)

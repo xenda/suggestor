@@ -27,11 +27,9 @@ require_relative '../lib/suggestor'
       it "must return similar items from the base one with pearson correlation" do
         
         @suggestor = Suggestor::Engine.new(@data_string,Suggestor::Algorithms::PearsonCorrelation)
-
-        expected = [["2", 1.0], ["1", 0.14285714285714285]]
-        
+        expected = [["2", 0.0], ["1", 0.0]]
         @suggestor.similar_to("3").must_be :==, expected
-        
+
       end
 
       it "must return similar items from the base one with euclidean distance" do

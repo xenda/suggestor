@@ -6,11 +6,11 @@ module Suggestor
 
   class Engine
 
-    attr_accessor :collection, :algorithm_class, :algorithm
+    attr_accessor :collection, :algorithm
 
     def initialize(input, algorithm=Algorithms::EuclideanDistance)
-      collection = parse_from_json(input)
-      @algorithm = algorithm.new(collection)
+      @collection = parse_from_json(input)
+      @algorithm = algorithm.new(@collection)
     end
     
     def similar_to(item, opts={})

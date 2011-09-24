@@ -4,10 +4,10 @@ require_relative '../lib/suggestor'
   describe Suggestor::Algorithms::PearsonCorrelation do
     
     before do
-      @data_string = File.read("test/numbers.json")
-      @suggestor = Suggestor::Engine.new
-      @suggestor.load_data(@data_string)
-      @algorithm = Suggestor::Algorithms::PearsonCorrelation.new(@suggestor.collection)
+      data_string = File.read("test/numbers.json")
+      
+      suggestor = Suggestor::Engine.new(data_string)
+      @algorithm = Suggestor::Algorithms::PearsonCorrelation.new(suggestor.collection)
     end
 
     describe "when building up recommendations" do

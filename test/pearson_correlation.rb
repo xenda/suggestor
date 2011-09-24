@@ -5,9 +5,8 @@ require_relative '../lib/suggestor'
     
     before do
       data_string = File.read("test/numbers.json")
-      data = JSON.parse(data_string)
-
-      @algorithm = Suggestor::Algorithms::PearsonCorrelation.new(data)
+      data        = JSON.parse(data_string)
+      @algorithm  = Suggestor::Algorithms::PearsonCorrelation.new(data)
     end
 
     describe "when building up recommendations" do
@@ -23,7 +22,6 @@ require_relative '../lib/suggestor'
       it "must return -1 as similarity record if two elements are totally distant" do 
         @algorithm.similarity_score(1,99).must_be :==, -1
       end
-
 
     end
   end

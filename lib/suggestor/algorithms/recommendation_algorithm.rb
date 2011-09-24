@@ -13,11 +13,9 @@ module Suggestor
         opts.merge!(default_options)
  
         collection = remove_self(main)
-
-        results = order_by_similarity_score(main,collection)
+        results    = order_by_similarity_score(main,collection)
 
         sort_results(results,opts[:size])
-
       end
 
       # Ex. a user will get movie recommendations
@@ -30,7 +28,6 @@ module Suggestor
         results = generate_rankings
 
         sort_results(results,opts[:size])
-
       end
 
       # Ex. what other movies are related to a given one
@@ -38,10 +35,9 @@ module Suggestor
         opts.merge!(default_options)
 
         collection = invert_collection
-
-        engine = self.class.new(collection)
+        engine     = self.class.new(collection)
+        
         engine.similar_to(main,opts)
-      
       end
 
       def shared_items(first, second)
@@ -76,10 +72,8 @@ module Suggestor
 
         collection.keys.each do |main|
           collection[main].keys.each do |item|
-
             results[item] ||= {}
             results[item][main] = collection[main][item]
-
           end
         end
 
@@ -87,11 +81,9 @@ module Suggestor
       end
 
       def order_by_similarity_score(main,collection)
-
         result = collection.keys.inject({}) do |res, other|
           res.merge!({other => similarity_score(main, other)})
         end
-
       end
 
       def already_has?(main, related)
@@ -107,17 +99,16 @@ module Suggestor
       end
  
       def add_to_totals(other, item, score)
-        @totals[item] += collection[other][item]*score
+        @totals[item]       += collection[other][item]*score
         @similarities[item] += score
       end
 
       def sort_results(results,size=-1)
         sorted = results.sort{|a,b| a[1] <=> b[1]}.reverse
-        return sorted[0, size]
+        sorted[0, size]
       end
 
       def generate_rankings
-
         rankings = {}
         
         @totals.each_pair do |item, total|
@@ -126,7 +117,6 @@ module Suggestor
         end
 
         rankings
-        
       end
 
       def something_in_common?(score)

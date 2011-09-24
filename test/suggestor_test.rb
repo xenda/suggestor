@@ -10,7 +10,6 @@ require_relative '../lib/suggestor'
       it "must raise an exception with invalid data" do
         lambda{ Suggestor::Engine.new("GIBBERISH") }.must_raise Suggestor::WrongInputFormat
       end
-
     end
 
     describe "when accesing the data after load_dataing it" do
@@ -25,11 +24,9 @@ require_relative '../lib/suggestor'
       end
 
       it "must return similar items from the base one with pearson correlation" do
-        
         @suggestor = Suggestor::Engine.new(@data_string,Suggestor::Algorithms::PearsonCorrelation)
         expected = [["2", 0.0], ["1", 0.0]]
         @suggestor.similar_to("3").must_be :==, expected
-
       end
 
       it "must return similar items from the base one with euclidean distance" do

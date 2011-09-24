@@ -33,10 +33,11 @@ module Suggestor
 
       def sum_squares(first, second)
         shared_items(first, second).inject(0.0) do |sum, item|
-          sum + (values_for(first)[item] - values_for(second)[item])**2
+          sum + ( values_for(first)[item] - values_for(second)[item] ) ** 2
         end
       end
 
     end
+    
   end
 end

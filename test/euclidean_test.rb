@@ -6,8 +6,8 @@ require_relative '../lib/suggestor'
     
     before do
       data_string = File.read("test/numbers.json")
-      data = JSON.parse(data_string)
-      @algorithm = Suggestor::Algorithms::EuclideanDistance.new(data)
+      data        = JSON.parse(data_string)
+      @algorithm  = Suggestor::Algorithms::EuclideanDistance.new(data)
     end
 
     describe "when building up recommendations" do

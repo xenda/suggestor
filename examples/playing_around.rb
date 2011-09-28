@@ -4,7 +4,7 @@ require_relative '../lib/suggestor'
 # Each user have a hash of their reviews with the movie and
 # what they've rate them with
 json = File.read("test/movies.json")
-suggestor = Suggestor::Suggestor.new(json, Suggestor::Algorithms::EuclideanDistance)
+suggestor = Suggestor::Suggestor.new(json)
 
 # Let's get some similar users 
 name = "Alvaro Pereyra Rabanal"
@@ -34,6 +34,9 @@ puts results.inspect
 
 puts
 puts
+
+puts "Adjust this results please"
+suggestor = Suggestor::Suggestor.new(json)
 
 name = "Batman Begins "
 puts "Now that was nice. But which others are similar to '#{name}'"

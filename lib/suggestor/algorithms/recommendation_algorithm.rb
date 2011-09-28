@@ -14,7 +14,7 @@ module Suggestor
         
         cleaned = @collection.remove(main)
 
-        results    = order_by_similarity_score(main,cleaned)
+        results = order_by_similarity_score(main, cleaned)
 
         sort_results(results,opts[:size])
       end
@@ -26,6 +26,7 @@ module Suggestor
         @similarities = @totals = Hash.new(0)
 
         create_similarities_totals(main)
+
         results = generate_rankings
 
         sort_results(results,opts[:size])
@@ -35,10 +36,10 @@ module Suggestor
       def similar_related_to(main, opts={})
         opts.merge!(default_options)
 
-        collection = @collection.invert
-        engine     = self.class.new(collection)
+        inverted_collection = @collection.invert
+        suggestor     = self.class.new(inverted_collection)
         
-        engine.similar_to(main,opts)
+        suggestor.similar_to(main,opts)
       end
 
      private
@@ -47,7 +48,7 @@ module Suggestor
         {size: 5}
       end
 
-      def order_by_similarity_score(main,collection)
+      def order_by_similarity_score(main, collection)
         result = collection.keys.inject({}) do |res, other|
           res.merge!({other => similarity_score(main, other)})
         end

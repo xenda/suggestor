@@ -55,8 +55,7 @@ module Suggestor
           sum + ( values_for(first)[item] - values_for(second)[item] ) ** 2
         end
       end
-
-      
+   
       # changes { "Cat": {"1": 10, "2":20}, "Dog": {"1":5, "2": 15} }
       # to {"1": {"Cat": 10, "Dog": 5}, "2": {"Cat": 20, "Dog": 15}
       def invert
@@ -70,12 +69,6 @@ module Suggestor
         end
 
         results
-      end
-
-      def order_by_similarity(main,scores_between)
-        result = self.keys.inject({}) do |res, other|
-          res.merge!({other => scores_between(main, other)})
-        end
       end
 
     end

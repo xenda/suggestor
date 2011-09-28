@@ -39,6 +39,7 @@ module Suggestor
         process_values(first, second)
 
         numerator   = difference_from_values
+
         denominator = square_root_from_differences
 
         return 0.0 if denominator == 0

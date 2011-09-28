@@ -23,18 +23,8 @@ module Suggestor
       include RecommendationAlgorithm
 
       def similarity_score(first, second)
-        return 0.0 if nothing_shared?(first, second)
-        inverse_of_squares(first, second)
-      end
-
-      def inverse_of_squares(first, second)
-        1/(1+Math.sqrt(sum_squares(first, second)))
-      end
-
-      def sum_squares(first, second)
-        shared_items(first, second).inject(0.0) do |sum, item|
-          sum + ( values_for(first)[item] - values_for(second)[item] ) ** 2
-        end
+        return 0.0 if @collection.nothing_shared?(first, second)
+        @collection.inverse_of_squares(first, second)
       end
 
     end

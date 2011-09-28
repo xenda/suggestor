@@ -11,10 +11,10 @@ module Suggestor
       # Ex. Similar users based on their movies reviews
       def similar_to(main, opts={})
         opts.merge!(default_options)
-        puts @collection.inspect
-        collection = @collection.remove(main)
-        puts collection
-        results    = order_by_similarity_score(main,collection)
+        
+        cleaned = @collection.remove(main)
+
+        results    = order_by_similarity_score(main,cleaned)
 
         sort_results(results,opts[:size])
       end
@@ -41,44 +41,20 @@ module Suggestor
         engine.similar_to(main,opts)
       end
 
-      def shared_items(first, second)
-        return [] unless values_for(first) && values_for(second)        
-         
-        related_keys_for(first).select do |item| 
-          related_keys_for(second).include? item
-        end
-      end           
-
      private
 
       def default_options
         {size: 5}
       end
 
-      def nothing_shared?(first, second)
-        shared_items(first, second).empty?
-      end
-
       def order_by_similarity_score(main,collection)
-        result = @collection.keys.inject({}) do |res, other|
+        result = collection.keys.inject({}) do |res, other|
           res.merge!({other => similarity_score(main, other)})
         end
       end
-
-      def already_has?(main, related)
-        @collection[main].has_key?(related)
-      end
       
-      def values_for(id)
-        @collection[id.to_s]
-      end
-
-      def related_keys_for(id)
-        values_for(id).keys
-      end
- 
       def add_to_totals(other, item, score)
-        @totals[item]       += @collection[other][item]*score
+        @totals[item]       += @collection[other][item] * score
         @similarities[item] += score
       end
 
@@ -118,7 +94,7 @@ module Suggestor
 
           @collection[other].keys.each do |item|
 
-            unless already_has?(main, item)
+            unless @collection.already_has?(main, item)
               add_to_totals(other, item, score)            
             end
 

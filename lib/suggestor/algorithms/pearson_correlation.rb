@@ -34,7 +34,7 @@ module Suggestor
       include RecommendationAlgorithm
 
       def similarity_score(first, second)
-        return -1.0 if nothing_shared?(first, second)
+        return -1.0 if @collection.nothing_shared?(first, second)
 
         process_values(first, second)
 
@@ -48,11 +48,11 @@ module Suggestor
       private
 
       def process_values(first, second)
-        items                = shared_items(first, second)
+        items                = @collection.shared_items(first, second)
         @total_related_items = items.size.to_f
 
-        first_values  = values_for(first)
-        second_values = values_for(second)
+        first_values  = @collection.values_for(first)
+        second_values = @collection.values_for(second)
 
         create_helper_variables
 

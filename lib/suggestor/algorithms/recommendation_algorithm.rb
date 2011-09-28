@@ -5,14 +5,15 @@ module Suggestor
       attr_accessor :collection
 
       def initialize(collection)
-        @collection = collection
+        @collection = Records.new(collection)
       end
 
       # Ex. Similar users based on their movies reviews
       def similar_to(main, opts={})
         opts.merge!(default_options)
- 
-        collection = remove_self(main)
+        puts @collection.inspect
+        collection = @collection.remove(main)
+        puts collection
         results    = order_by_similarity_score(main,collection)
 
         sort_results(results,opts[:size])
@@ -34,7 +35,7 @@ module Suggestor
       def similar_related_to(main, opts={})
         opts.merge!(default_options)
 
-        collection = invert_collection
+        collection = @collection.invert
         engine     = self.class.new(collection)
         
         engine.similar_to(main,opts)
@@ -58,40 +59,18 @@ module Suggestor
         shared_items(first, second).empty?
       end
 
-      def remove_self(main)
-        cleaned = collection.dup
-        cleaned.delete(main)
-        cleaned
-      end
-
-
-      # changes { "Cat": {"1": 10, "2":20}, "Dog": {"1":5, "2": 15} }
-      # to {"1": {"Cat": 10, "Dog": 5}, "2": {"Cat": 20, "Dog": 15}
-      def invert_collection
-        results = {}
-
-        collection.keys.each do |main|
-          collection[main].keys.each do |item|
-            results[item] ||= {}
-            results[item][main] = collection[main][item]
-          end
-        end
-
-        results
-      end
-
       def order_by_similarity_score(main,collection)
-        result = collection.keys.inject({}) do |res, other|
+        result = @collection.keys.inject({}) do |res, other|
           res.merge!({other => similarity_score(main, other)})
         end
       end
 
       def already_has?(main, related)
-        collection[main].has_key?(related)
+        @collection[main].has_key?(related)
       end
       
       def values_for(id)
-        collection[id.to_s]
+        @collection[id.to_s]
       end
 
       def related_keys_for(id)
@@ -99,7 +78,7 @@ module Suggestor
       end
  
       def add_to_totals(other, item, score)
-        @totals[item]       += collection[other][item]*score
+        @totals[item]       += @collection[other][item]*score
         @similarities[item] += score
       end
 
@@ -129,7 +108,7 @@ module Suggestor
 
       def create_similarities_totals(main)
         
-        collection.keys.each do |other|
+        @collection.keys.each do |other|
          
           next if same_item?(main,other)
 
@@ -137,7 +116,7 @@ module Suggestor
 
           next unless something_in_common?(score)
 
-          collection[other].keys.each do |item|
+          @collection[other].keys.each do |item|
 
             unless already_has?(main, item)
               add_to_totals(other, item, score)            

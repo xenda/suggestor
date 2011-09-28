@@ -1,21 +1,21 @@
 require 'minitest/autorun'
 require_relative '../lib/suggestor'
 
-  describe Suggestor::Engine do
+  describe Suggestor::Suggestor do
     before do
       @data_string = File.read("test/numbers.json")
     end
 
     describe "when loading up the data structure" do
       it "must raise an exception with invalid data" do
-        lambda{ Suggestor::Engine.new("GIBBERISH") }.must_raise Suggestor::WrongInputFormat
+        lambda{ Suggestor::Suggestor.new("GIBBERISH") }.must_raise Suggestor::WrongInputFormat
       end
     end
 
     describe "when accesing the data after load_dataing it" do
 
       before do
-        @suggestor = Suggestor::Engine.new(@data_string)
+        @suggestor = Suggestor::Suggestor.new(@data_string)
       end
 
       it "must return similar items from the base one with euclidean distance" do
@@ -24,7 +24,7 @@ require_relative '../lib/suggestor'
       end
 
       it "must return similar items from the base one with pearson correlation" do
-        @suggestor = Suggestor::Engine.new(@data_string,Suggestor::Algorithms::PearsonCorrelation)
+        @suggestor = Suggestor::Suggestor.new(@data_string,Suggestor::Algorithms::PearsonCorrelation)
         expected = [["2", 0.0], ["1", 0.0]]
         @suggestor.similar_to("3").must_be :==, expected
       end

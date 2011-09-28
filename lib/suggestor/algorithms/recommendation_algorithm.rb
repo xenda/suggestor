@@ -79,15 +79,11 @@ module Suggestor
         score > 0
       end
 
-      def same_item?(main, other)
-        other == main
-      end
-
       def create_similarities_totals(main)
         
         @collection.keys.each do |other|
          
-          next if same_item?(main,other)
+          next if other == main
 
           score = similarity_score(main, other)
 

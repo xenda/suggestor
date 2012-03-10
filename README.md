@@ -81,4 +81,19 @@ want to check which other movies are similar to it:
 
     suggestor.similar_related_to("Batman Begins ", :size => 5)
 
+### Suggested items for a set
+
+Say that you have the list of the movies that you liked the most and you'd like to know what you should watch next. Suggestor has you covered:
+
+	suggestor.items_for_set ['Batman Begins', 'Cyrus']
+	# => [["Kung Fu Hustle", 0.5], ["Super 8 ", 0.5], ["Celda 211 ", 0.5], ... ]
+
+Suggestor of course considers the whole set when recommending new items, so different sets will yield different results, even if they differ in only one item. Say you picked Super 8 from the previous query:
+	suggestor.items_for_set ['Batman Begins', 'Cyrus', 'Super 8 ']
+	# => [["Rapidos y Furiosos 5", 0.3333333333333333], ["Agente Salt", 0.3333333333333333], ["Mary and Max ", 0.3333333333333333], ... ]
+
+But if you had picked Kung Fu Hustle:
+	suggestor.items_for_set ['Batman Begins', 'Cyrus', 'Kung Fu Hustle']
+	# => [["El mensajero ", 0.6666666666666666], ["El Club de la Pelea", 0.3333333333333333], ["Un tonto en el amor", 0.3333333333333333], ... ]
+
 Now you can go and build your awesome recommendations web site :)

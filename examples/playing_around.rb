@@ -43,3 +43,12 @@ puts "Now that was nice. But which others are similar to '#{name}'"
 ops = {size: 10}
 results = suggestor.similar_related_to(name, opts)
 puts results.inspect
+
+puts
+puts
+
+set = ['Batman Begins', 'Cyrus']
+puts "Great! One more thing: if I've watched all these movies: #{set.inspect},
+which should I watch next?"
+results = suggestor.items_for_set set
+puts results.inspect

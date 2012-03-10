@@ -39,5 +39,10 @@ require_relative '../lib/suggestor'
         @suggestor.similar_related_to("2").must_be :==, expected
       end
 
+      it "must return items that might follow a sequence" do
+        expected = [["5", 0.29166666666666663], ["3", 0.29166666666666663], ["4", 0.16666666666666666]]
+        @suggestor.items_for_set(['1', '2']).must_be :==, expected
+      end
+
     end
   end

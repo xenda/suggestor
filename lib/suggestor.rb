@@ -26,6 +26,10 @@ module Suggestor
       @algorithm.similar_related_to(item, opts)
     end
 
+    def items_for_set(set, opts={})
+      @algorithm.items_for_set(set, opts)
+    end
+
     private
 
     def parse_from_json(json)

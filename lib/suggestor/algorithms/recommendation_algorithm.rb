@@ -42,6 +42,23 @@ module Suggestor
         suggestor.similar_to(main,opts)
       end
 
+      # Takes a set and returns suggestions based on the weighted average of
+      # the similarities to all of the items in it.
+      def items_for_set(set, opts={})
+        opts.merge!(default_options)
+
+        suggestions = Hash.new(0.0)
+
+        set.each do |item|
+          related = similar_related_to(item, opts)
+          related.each { |rel| suggestions[rel[0]] += rel[1] unless
+            set.include? rel[0] }
+        end
+
+        suggestions = suggestions.map { |label, score| [label, score / set.length] }
+        suggestions.sort_by { |sug| sug[1] }.reverse
+      end
+
      private
 
       def default_options

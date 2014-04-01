@@ -10,7 +10,7 @@ module Suggestor
   class Suggestor
 
     def initialize(input, algorithm = Algorithms::EuclideanDistance)
-      collection = parse_from_json(input)
+      collection = load_from(input)
       @algorithm  = algorithm.new(collection)
     end
 
@@ -31,6 +31,11 @@ module Suggestor
     end
 
     private
+
+    def load_from(input)
+      return input if input.is_a? Hash
+      parse_from_json(input)
+    end
 
     def parse_from_json(json)
       JSON.parse(json)

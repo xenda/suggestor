@@ -12,6 +12,22 @@ require_relative '../lib/suggestor'
       end
     end
 
+    describe "when using a hash object for loading" do
+
+      before do
+        @data_string = File.read("test/numbers.json")
+        @data = JSON.parse(@data_string)
+        @suggestor = Suggestor::Suggestor.new(@data)
+      end
+
+      it "must return similar items from the base one with euclidean distance" do
+        expected = [["3", 0.14285714285714285], ["2", 0.14285714285714285]]
+        @suggestor.similar_to("1").must_be :==, expected
+      end
+      
+
+    end
+
     describe "when accesing the data after load_dataing it" do
 
       before do

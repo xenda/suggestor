@@ -22,6 +22,9 @@ After loading the gem with the data:
 
 We can start to get some results. 
 
+If using Ruby, you can also send Suggestor just a hash object and it'll take it aswell:
+
+    suggestor = Suggestor::Suggestor.new(JSON.parse(data))    
 
 ### Similar items
 
